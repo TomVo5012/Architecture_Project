@@ -7,6 +7,12 @@
     Message4: .asciz "Your input for color is invalid\n Please input again\n"
     Message5: .asciz "Your input is wrong!!! \nPlease enter again!!!\n\n"   
     Message6: .asciz "\n"
+    Message7: .asciz "Enter your secret code\n"
+    Message8: .asciz "Player 1 secret code: "
+    Message9: .asciz "Player 2 guess number "
+    Message10: .asciz "Player 2 guess array: "
+    Message11: .asciz " "
+    Message12: .asciz ":\n"
     ReplacementSymbol: .asciz "*"
     array: .byte 0, 0, 0, 0
     array1: .byte 0, 0, 0, 0
@@ -58,8 +64,14 @@ __start:
 
 
 player1_input:
+
+    addi a0, x0, 4
+    la a1, Message7
+    ecall
+    
     add t0, x0, x0
-   
+
+
     
     addi a0, x0, 5
     ecall
@@ -110,8 +122,15 @@ player1_input:
 
     ############## Print out the array ##############################
     player1_print:
+
+        addi a0, x0, 4
+        la a1, Message8
+        ecall
+    
+
         #load the base address of the array into a register 
         la a3, array
+
 
         #load the value in each index into register 
         #Print value each index 
@@ -121,19 +140,31 @@ player1_input:
         add a1, x0, t4
         ecall 
 
-        lb a2, 8(a3) 
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        lb a2, 16(a3) 
         add t4, a2, t1
         addi a0, x0, 1
         add a1, x0, t4
         ecall
 
-        lb a2, 16(a3)
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        lb a2, 32(a3)
         add t4, a2, t2
         addi a0, x0, 1
         add a1, x0, t4
         ecall
 
-        lb a2, 32(a3)
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        lb a2, 64(a3)
         add t4, a2, t3
         addi a0, x0, 1
         add a1, x0, t4
@@ -146,14 +177,29 @@ player1_input:
 
 player2_input:    
 
-    addi t0, x0, 10
+    addi t0, x0, 3
     add t1, x0, x0
     add t2, x0, x0
     add t3, x0, x0
     add t4, x0, x0 
+    addi a4, x0, 1
 
     player2_input_loop:
         beq t0, x0, end_program
+
+        addi a0, x0, 4
+        la a1, Message9
+        ecall
+
+        addi a0, x0, 1
+        add a1, x0, a4
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message12
+        ecall
+        
+        addi a4, a4, 1
 
         addi a0, x0, 5
         ecall
@@ -204,6 +250,12 @@ player2_input:
 
         ############## Print out the array ##############################
         player2_print:
+
+            addi a0, x0, 4
+            la a1, Message10
+            ecall
+    
+
             #load the base address of the array into a register 
             la a2, array1
 
@@ -213,21 +265,33 @@ player2_input:
             add t5, a5, t1
             addi a0, x0, 1
             add a1, x0, t5
+            ecall  
+
+            addi a0, x0, 4
+            la a1, Message11
             ecall 
 
-            lb a5, 8(a2) 
+            lb a5, 16(a2) 
             add t5, a5, t2
             addi a0, x0, 1
             add a1, x0, t5
             ecall
 
-            lb a5, 16(a2)
+            addi a0, x0, 4
+            la a1, Message11
+            ecall
+
+            lb a5, 32(a2)
             add t5, a5, t3
             addi a0, x0, 1
             add a1, x0, t5
             ecall
 
-            lb a5, 32(a2)
+            addi a0, x0, 4
+            la a1, Message11
+            ecall
+
+            lb a5, 64(a2)
             add t5, a5, t4
             addi a0, x0, 1
             add a1, x0, t5
