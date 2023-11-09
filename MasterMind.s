@@ -3,7 +3,7 @@
     Message: .asciz "Welcome to the Master Mind Game!!!! \nInstructions:\n1: You will have 10 trials to complete the game \n2: In each trial, a player must guess the each color in the correct position and correct color \n3: A player win by having the less guess for the trials \nAuthors: Kiet Vo and Emanuel Cintron \n"
     Message1: .asciz "Player 1: Enter 1 to input your secret code\n"
     Message2: .asciz "Player 2: Enter 2 to start the game\n"
-    Message3: .asciz "Your input is wrong!!! \nPlease enter again!!!\n"
+    Message3: .asciz "Your input is wrong!!!\nPlease enter again!!!\n"
     Message4: .asciz "Your input for color is invalid\n Please input again\n"
     Message5: .asciz "Your input is wrong!!!\nPlease enter again!!!\n\n"   
     Message6: .asciz "\n"
@@ -25,7 +25,6 @@
     num5: .byte 0
     num6: .byte 0
     num7: .byte 0
-
 
 .text
 __start:
