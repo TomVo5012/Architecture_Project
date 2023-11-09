@@ -5,12 +5,12 @@
     Message2: .asciz "Player 2: Enter 2 to start the game\n"
     Message3: .asciz "Your input is wrong!!! \nPlease enter again!!!\n"
     Message4: .asciz "Your input for color is invalid\n Please input again\n"
-    Message5: .asciz "Your input is wrong!!! \nPlease enter again!!!\n\n"   
+    Message5: .asciz "Your input is wrong!!!\nPlease enter again!!!\n\n"   
     Message6: .asciz "\n"
     Message7: .asciz "Enter your secret code\n"
     Message8: .asciz "Player 1 secret code: "
     Message9: .asciz "Player 2 guess number "
-    Message10: .asciz "Player 2 guess array: "
+    Message10: .asciz "Player 2 guess is: "
     Message11: .asciz " "
     Message12: .asciz ":\n"
     ReplacementSymbol: .asciz "*"
@@ -53,7 +53,7 @@ __start:
         addi t1, x0, 1
         addi t2, x0, 2
         beq t0, t1, player1_input
-        beq t0, t2, player2_input 
+        #beq t0, t2, player2_input 
         
         addi a0, x0, 4
         la a1, Message5
@@ -68,10 +68,6 @@ player1_input:
     addi a0, x0, 4
     la a1, Message7
     ecall
-    
-    add t0, x0, x0
-
-
     
     addi a0, x0, 5
     ecall
@@ -110,9 +106,13 @@ player1_input:
     player1_input_condition:
         addi t6, x0, 5
         bge t1, t6, player1_input_condition1
+        beq t1, x0, player1_input_condition1
         bge t2, t6, player1_input_condition1
+        beq t2, x0, player1_input_condition1
         bge t3, t6, player1_input_condition1
+        beq t3, x0, player1_input_condition1
         bge t0, t6, player1_input_condition1
+        beq t0, x0, player1_input_condition1
         beq x0, x0, player1_print 
         player1_input_condition1:
             addi a0, x0, 4
@@ -134,40 +134,40 @@ player1_input:
 
         #load the value in each index into register 
         #Print value each index 
-        lb a2, 0(a3)
-        add t4, a2, t0
+        sb a2, 0(a3)
+        add s0, a2, t0
         addi a0, x0, 1
-        add a1, x0, t4
+        add a1, x0, s0
         ecall 
 
         addi a0, x0, 4
         la a1, Message11
         ecall
 
-        lb a2, 16(a3) 
-        add t4, a2, t1
+        sb a2, 16(a3) 
+        add s1, a2, t1
         addi a0, x0, 1
-        add a1, x0, t4
+        add a1, x0, s1
         ecall
 
         addi a0, x0, 4
         la a1, Message11
         ecall
 
-        lb a2, 32(a3)
-        add t4, a2, t2
+        sb a2, 32(a3)
+        add s2, a2, t2
         addi a0, x0, 1
-        add a1, x0, t4
+        add a1, x0, s2
         ecall
 
         addi a0, x0, 4
         la a1, Message11
         ecall
 
-        lb a2, 64(a3)
-        add t4, a2, t3
+        sb a2, 64(a3)
+        add s3, a2, t3
         addi a0, x0, 1
-        add a1, x0, t4
+        add a1, x0, s3
         ecall
 
         addi a0, x0, 4
@@ -199,8 +199,6 @@ player2_input:
         la a1, Message12
         ecall
         
-        addi a4, a4, 1
-
         addi a0, x0, 5
         ecall
         la t1, num4
@@ -238,9 +236,13 @@ player2_input:
         player2_input_condition:
             addi t6, x0, 5
             bge t1, t6, player2_input_condition1
+            beq t1, x0, player2_input_condition1
             bge t2, t6, player2_input_condition1
+            beq t2, x0, player2_input_condition1
             bge t3, t6, player2_input_condition1
+            beq t3, x0, player2_input_condition1
             bge t4, t6, player2_input_condition1
+            beq t4, x0, player2_input_condition1
             beq x0, x0, player2_print 
             player2_input_condition1:
                 addi a0, x0, 4
@@ -262,9 +264,9 @@ player2_input:
             #load the value in each index into register 
             #Print value each index 
             lb a5, 0(a2)
-            add t5, a5, t1
+            add t1, a5, t1
             addi a0, x0, 1
-            add a1, x0, t5
+            add a1, x0, t1
             ecall  
 
             addi a0, x0, 4
@@ -272,9 +274,9 @@ player2_input:
             ecall 
 
             lb a5, 16(a2) 
-            add t5, a5, t2
+            add t2, a5, t2
             addi a0, x0, 1
-            add a1, x0, t5
+            add a1, x0, t2
             ecall
 
             addi a0, x0, 4
@@ -282,9 +284,9 @@ player2_input:
             ecall
 
             lb a5, 32(a2)
-            add t5, a5, t3
+            add t3, a5, t3
             addi a0, x0, 1
-            add a1, x0, t5
+            add a1, x0, t3
             ecall
 
             addi a0, x0, 4
@@ -292,15 +294,17 @@ player2_input:
             ecall
 
             lb a5, 64(a2)
-            add t5, a5, t4
+            add t4, a5, t4
             addi a0, x0, 1
-            add a1, x0, t5
+            add a1, x0, t4
             ecall
 
             addi a0, x0, 4
             la a1, Message6
             ecall
+            
             addi t0, t0, -1
+            addi a4, a4, 1
             beq x0, x0, player2_input_loop
  
 ################ Start constructing player2 game ################################     
