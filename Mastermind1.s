@@ -204,55 +204,98 @@ compare:
     li t1, 0
     li t2, 0
     li t3, 0
-    li t4, 0
-    li t5, 0
-    li t6, 4
     li a5, 0
     li a6, 0
-    li s4, 0
-    li s3, 0
-    li s5, 4
     li x24, 4
+    li x27, 0
+    li x26, 0
+    li t4, 0
+    li t5, 0
+    li t6, 0
+    li x27, 0
+    li x23, 0
+    li x1, 0
+    li x2, 0
 
 load_value_array1:
     beq x24, x0, print_result
-
-    la s1, array
-    slli t2, t1, 6
-    add t3, s1, t2
-    lb a5, 0(t3)
-
+    
     la s2, array1
-    slli t2, t4, 6
-    add  t5, s2, t2
-    lb a6, 0(t5)
+    slli t2, t1, 6
+    add t3, s2, t2
+    lb a5, 0(t3)
+    beq t1, t4, reset_values
+    bne t1, t4, load_value_array
 
-    beq a5, a6, compare_case1
-    bne a5, a6, compare_case2
+    reset_values:
+        li x23, 4
+        li t4, 0
+        li t5, 0
+        li t6, 0
+        li x27, 0
+    load_value_array:
+        beq x23, x0, return_array
 
-    compare_case1:
-        beq t1, t4, compare_case1_1
-        bne t1, t4, compare_case1_2
-        compare_case1_1:
-            addi s3, s3, 1
-            addi t1, t1, 1
+        la s1, array
+        slli t5, t4, 6
+        add t6, s1, t5
+        lb a6, 0(t6)
+
+        addi a0, x0, 1
+        add a1, x0, t1
+        ecall
+
+        addi a0, x0, 1
+        add a1, x0, t4
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message6
+        ecall
+
+        beq a5, a6, equal_value
+        bne a5, a6, not_equal_value
+
+        equal_value:
+            beq t1, t4, equal_value_and_position
+            bne t1, t4, equal_value_not_position
+            equal_value_and_position:
+                addi x26, x26, 1
+                addi t1, t1, 1
+                addi t4, t4, 1
+                addi a0, x0, 1
+                add a1, x0, t1
+                ecall
+                addi a0, x0, 1
+                add a1, x0, t4
+                ecall
+                addi a0, x0, 4
+                la a1, Message6
+                ecall
+
+                addi x23, x23, -1
+                addi a0, x0, 1
+                add a1, x0, x23
+                ecall
+                addi x24, x24, -1
+                beq x0, x0 load_value_array1
+
+            equal_value_not_position:
+                addi x27, x27, 1
+                addi t1, t1, 1
+                addi t4, t4, 1
+                addi x23, x23, -1
+                beq x0, x0 load_value_array1
+
+        not_equal_value:
             addi t4, t4, 1
-            addi x24, x24, -1
-            jal x0, load_value_array1
-        compare_case1_2:
-            addi s4, s4, 1
-            addi t1, t1, 1
-            addi x24, x24, -1
-            jal x0, load_value_array1
-    compare_case2:
-        beq t1, s5, compare_case2_1
-        addi t1, t1, 1
-        jal x0, load_value_array1 
-        compare_case2_1:
-            addi t4, t4, 1
-            li t1, 0
-            jal x0, load_value_array1
+            addi x23, x23, -1
+            jal x0, load_value_array
 
+return_array:
+    addi t1, t1, 1
+    addi x24, x24, -1
+    jal x0, load_value_array1
 
 print_result:
     li s5, 4
@@ -262,7 +305,7 @@ print_result:
     ecall
 
     addi a0, x0, 1
-    add a1, x0, s4
+    add a1, x0, x27
     ecall
 
     addi a0, x0, 4
@@ -274,10 +317,11 @@ print_result:
     ecall
 
     addi a0, x0, 1
-    add a1, x0, s3
+    add a1, x0, x26
     ecall
 
-    beq s5, s3, end_program
+    beq s5, x26, end_program
+
 return_function:
     addi a0, x0, 4
     la a1, Message6
