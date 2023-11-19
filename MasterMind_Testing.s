@@ -11,13 +11,12 @@
     Message7: .asciz "Enter your secret code\n"
     Message8: .asciz "Player 1 secret code: "
     Message9: .asciz "Your Trial "
-    Message10: .asciz "Player 2 guess is: "
+    Message10: .asciz "Your guess is: "
     Message11: .asciz " "
     Message12: .asciz ": "
     Message12.1: .asciz ": \n"
-    Message13: .asciz "Testing the consistency of the array: "
-    Message14: .asciz "Wrong Position: "
-    Message15: .asciz "Correct Position: "
+    Message14: .asciz "Correct Colors But Wrong Position: "
+    Message15: .asciz "Correct Colors and Correct Position: "
     Message16: .asciz "Enter your secret code in position "
     Message17: .asciz "Enter your guess in position "
     
@@ -52,7 +51,6 @@ __start:
     li t4, 0
     li t5, 1
     
-
 # Loop to store the value in the array
 player1_input:
     beq t1, x0, player2
@@ -140,7 +138,7 @@ player2:
         li t3, 0
         li t4, 0
     player2_input:
-        beq t1, x0, compare
+        beq t1, x0, display_guess
 
         # lreset the value of register t0
         li t0, 0
@@ -200,22 +198,55 @@ player2:
             addi t5, t5, 1
             jal x0, player2_input
 
+display_guess:
+    addi a0, x0, 4
+    la a1, Message10
+    ecall
+
+    li t4, 0
+    li t2, 0
+    li t5, 0
+    li a6, 0
+    li t6, 4
+    display_guess_code:
+        beq t6, x0, compare 
+        la s2, array1
+        slli t2, t4, 6
+        add  t5, s2, t2
+        lb a6, 0(t5)
+
+        # Print out the number 
+        addi a0, x0, 1
+        add a1, x0, a6
+        ecall
+        # Give space for each number 
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        addi t4, t4, 1
+        addi t6, t6, -1
+        jal x0, display_guess_code
+
 compare:
+    # reset all values 
     li t1, 0
     li t2, 0
     li t3, 0
     li t4, 0
     li t5, 0
-    li t6, 4
     li a5, 0
     li a6, 0
     li s4, 0
     li s3, 0
     li s5, 4
     li x24, 4
-
+    # Go to the next line 
+    addi a0, x0, 4
+    la a1, Message6
+    ecall
 load_value_array1:
-    beq x24, x0, print_result
+    beq t4, x24, print_result
 
     la s1, array
     slli t2, t1, 6
@@ -237,12 +268,11 @@ load_value_array1:
             addi s3, s3, 1
             addi t1, t1, 1
             addi t4, t4, 1
-            addi x24, x24, -1
             jal x0, load_value_array1
         compare_case1_2:
             addi s4, s4, 1
-            addi t1, t1, 1
-            addi x24, x24, -1
+            li t1, 0
+            addi t4, t4, 1
             jal x0, load_value_array1
     compare_case2:
         beq t1, s5, compare_case2_1
@@ -255,8 +285,6 @@ load_value_array1:
 
 
 print_result:
-    li s5, 4
-
     addi a0, x0, 4
     la a1, Message14
     ecall
