@@ -118,7 +118,7 @@ player2:
     la a1, Message23
     ecall
 
-    li a3, 2
+    li a3, 10
     li a4, 1
     count_trial:
         beq a3, x0, end_program 
