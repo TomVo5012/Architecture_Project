@@ -1,32 +1,32 @@
 .global __start
 .data
-    Message: .asciz "Welcome to the Master Mind Game!!!! \nInstructions:\n1: You will have 10 trials to complete the game \n2: In each trial, a player must guess the each color in the correct position and correct color \n3: A player win by having the less guess for the trials \nAuthors: Kiet Vo and Emanuel Cintron \n"
+    Message: .asciz "\nWelcome to the Master Mind Game!!!! \nInstructions:\n1: You will have 10 trials to complete the game \n2: In each trial, a player must guess the each color in the correct position and correct color \n3: A player win by having the less guess for the trials \nAuthors: Kiet Vo and Emanuel Cintron \n"
     Message1: .asciz "Player 1: Enter 1 to input your secret code\n"
     Message2: .asciz "Player 2: Enter 2 to start the game\n"
-    Message3: .asciz "Your input is wrong!!!\nPlease enter again!!!\n"
     Message4: .asciz "Your input "
-    Message4.1: .asciz " is invalid\nPlease Enter again!!!! \n "
-    Message5: .asciz "Your input is wrong!!!\nPlease enter again!!!\n\n"   
+    Message4.1: .asciz " is invalid\nPlease Enter again!!!! \n " 
     Message6: .asciz "\n"
     Message7: .asciz "Enter your secret code\n"
-    Message8: .asciz "Player 1 secret code: "
     Message9: .asciz "Your Trial "
-    Message10: .asciz "Player 2 guess is: "
+    Message10: .asciz "Your guess is: "
     Message11: .asciz " "
     Message12: .asciz ": "
     Message12.1: .asciz ": \n"
-    Message13: .asciz "Testing the consistency of the array: "
-    Message14: .asciz "Wrong Position: "
-    Message15: .asciz "Correct Position: "
+    Message14: .asciz "Correct Colors But Wrong Position: "
+    Message15: .asciz "Correct Colors and Correct Position: "
     Message16: .asciz "Enter your secret code in position "
     Message17: .asciz "Enter your guess in position "
-    
-    ReplacementSymbol: .asciz "*"
+    Message18: .asciz "CONGRATULATION!!!!!!\nYOU SUCCESSFULLY BROKE THE CODE\n"
+    Message19: .asciz "YOUR GUESS IS INCORRECT\nPLEASE ENTER YOUR GUESS AGAIN\n"
+    Message20: .asciz "You have "
+    Message21: .asciz "trials left\n\n"
+    Message22: .asciz "Would you like to restart the game? (Yes:6/Any Number to Exit)\nEnter your choice here: "
+    Message23: .asciz "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     array: .byte 0, 0, 0, 0
     array1: .byte 0, 0, 0, 0
-    P1: .byte 0
     num: .byte 0
     num1: .byte 0
+    num2: .byte 0
 
 .text
 __start:
@@ -46,13 +46,15 @@ __start:
     la a1, Message7
     ecall
 
+    li t0, 0
     li t1, 4
     li t2, 0
     li t3, 0
     li t4, 0
     li t5, 1
+    add a2, x0, x0
+    add a3, x0, x0
     
-
 # Loop to store the value in the array
 player1_input:
     beq t1, x0, player2
@@ -107,6 +109,7 @@ player1_input:
         slli t2, t3, 6
         add t4, s1, t2
         lb a2, 0(t4)
+        li a2, 0
         add a2, a2, t0
         sb a2, 0(t4)
 
@@ -117,7 +120,10 @@ player1_input:
         jal x0, player1_input
 
 player2:
-    li a3, 3
+    li a0, 4
+    la a1, Message23
+    ecall
+    li a3, 2
     li a4, 1
     count_trial:
         beq a3, x0, end_program 
@@ -140,7 +146,7 @@ player2:
         li t3, 0
         li t4, 0
     player2_input:
-        beq t1, x0, compare
+        beq t1, x0, display_guess
 
         # lreset the value of register t0
         li t0, 0
@@ -200,13 +206,47 @@ player2:
             addi t5, t5, 1
             jal x0, player2_input
 
+display_guess:
+    addi a0, x0, 4
+    la a1, Message6
+    ecall
+
+    addi a0, x0, 4
+    la a1, Message10
+    ecall
+
+    li t4, 0
+    li t2, 0
+    li t5, 0
+    li a6, 0
+    li t6, 4
+    display_guess_code:
+        beq t6, x0, compare 
+        la s2, array1
+        slli t2, t4, 6
+        add  t5, s2, t2
+        lb a6, 0(t5)
+
+        # Print out the number 
+        addi a0, x0, 1
+        add a1, x0, a6
+        ecall
+        # Give space for each number 
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        addi t4, t4, 1
+        addi t6, t6, -1
+        jal x0, display_guess_code
+
 compare:
+    # reset all values 
     li t1, 0
     li t2, 0
     li t3, 0
     li t4, 0
     li t5, 0
-    li t6, 4
     li a5, 0
     li a6, 0
     li s4, 0
@@ -214,8 +254,12 @@ compare:
     li s5, 4
     li x24, 4
 
+    # Go to the next line 
+    addi a0, x0, 4
+    la a1, Message6
+    ecall
 load_value_array1:
-    beq x24, x0, print_result
+    beq t4, x24, print_result
 
     la s1, array
     slli t2, t1, 6
@@ -237,12 +281,11 @@ load_value_array1:
             addi s3, s3, 1
             addi t1, t1, 1
             addi t4, t4, 1
-            addi x24, x24, -1
             jal x0, load_value_array1
         compare_case1_2:
             addi s4, s4, 1
-            addi t1, t1, 1
-            addi x24, x24, -1
+            li t1, 0
+            addi t4, t4, 1
             jal x0, load_value_array1
     compare_case2:
         beq t1, s5, compare_case2_1
@@ -255,8 +298,6 @@ load_value_array1:
 
 
 print_result:
-    li s5, 4
-
     addi a0, x0, 4
     la a1, Message14
     ecall
@@ -277,17 +318,91 @@ print_result:
     add a1, x0, s3
     ecall
 
-    beq s5, s3, end_program
+    addi a0, x0, 4
+    la a1, Message6
+    ecall    
+
+    beq s5, s3, break_code
 return_function:
     addi a0, x0, 4
     la a1, Message6
     ecall
 
+    addi a0, x0, 4
+    la a1, Message19
+    ecall
+
     addi a3, a3, -1
+
+    addi a0, x0, 4
+    la a1, Message20
+    ecall
+
+    addi a0, x0, 1
+    add a1, x0, a3
+    ecall
+
+    addi a0, x0, 4
+    la a1, Message11
+    ecall
+
+    addi a0, x0, 4
+    la a1, Message21
+    ecall
+
     addi a4, a4, 1
     beq x0, x0, count_trial
 
 end_program:
+    li a2, 6
+    add t0, x0, x0
+    
+    la a0, array
+    li a1, 1
+    li a1, 4
+
+    addi a0, x0, 4
+    la a1, Message22
+    ecall
+
+    addi a0, x0, 5
+    ecall 
+    la t0, num2
+    sb a0, 0(t0)
+    la t0, num2
+    lb t0, 0(t0)
+
+    addi a0, x0, 1
+    add a1, x0, t0
+    ecall
+
+    beq t0, a2, __start
     addi a0, x0, 10
     ecall
-    
+
+break_code:
+    li a2, 6
+    add t0, x0, x0
+
+    addi a0, x0, 4
+    la a1, Message6
+    ecall
+
+    addi a0, x0, 4
+    la a1, Message18
+    ecall
+
+    addi a0, x0, 4
+    la a1, Message22
+    ecall
+
+    addi a0, x0, 5
+    ecall 
+    la t0, num2
+    sb a0, 0(t0)
+    la t0, num2
+    lb t0, 0(t0)
+
+    beq t0, a2, __start
+    addi a0, x0, 10
+    ecall
