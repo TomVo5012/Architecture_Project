@@ -28,6 +28,7 @@
     num: .byte 0
     num1: .byte 0
     num2: .byte 0
+    num3: .byte 0
 
 .text
 __start:
@@ -469,3 +470,7 @@ break_code:
         beq t0, a2, __start
         addi a0, x0, 10
         ecall
+
+exit_program:
+    li a0, 10
+    ecall
