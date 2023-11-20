@@ -1,8 +1,6 @@
 .global __start
 .data
     Message: .asciz "\nWelcome to the Master Mind Game!!!! \nInstructions:\n1: You will have 10 trials to complete the game \n2: In each trial, a player must guess the each color in the correct position and correct color \n3: A player win by having the less guess for the trials \nAuthors: Kiet Vo and Emanuel Cintron \n"
-    Message1: .asciz "Player 1: Enter 1 to input your secret code\n"
-    Message2: .asciz "Player 2: Enter 2 to start the game\n"
     Message4: .asciz "Your input "
     Message4.1: .asciz " is invalid\nPlease Enter again!!!! \n " 
     Message6: .asciz "\n"
@@ -17,11 +15,14 @@
     Message16: .asciz "Enter your secret code in position "
     Message17: .asciz "Enter your guess in position "
     Message18: .asciz "CONGRATULATION!!!!!!\nYOU SUCCESSFULLY BROKE THE CODE\n"
-    Message19: .asciz "YOUR GUESS IS INCORRECT\nPLEASE ENTER YOUR GUESS AGAIN\n"
+    Message19: .asciz "YOUR GUESS IS INCORRECT\n"
+    Message19.1: .asciz "PLEASE ENTER YOUR GUESS AGAIN\n"
     Message20: .asciz "You have "
     Message21: .asciz "trials left\n\n"
-    Message22: .asciz "Would you like to restart the game? (Yes:6/Any Number to Exit)\nEnter your choice here: "
+    Message22: .asciz "Would you like to restart the game? (Type 6 to restart the game/Press Enter to exit the game)\nEnter your choice here: "
     Message23: .asciz "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    Message24: .asciz "The Secret Code is: "
+    Message25: .asciz "GAME OVER!!!!!\nYou have used 10 trials\n\n"
     array: .byte 0, 0, 0, 0
     array1: .byte 0, 0, 0, 0
     num: .byte 0
@@ -34,14 +35,6 @@ __start:
     la a1, Message
     ecall
     
-    addi a0, x0, 4
-    la a1, Message1
-    ecall
-
-    addi a0, x0, 4
-    la a1, Message2
-    ecall
-
     addi a0, x0, 4
     la a1, Message7
     ecall
@@ -123,6 +116,7 @@ player2:
     li a0, 4
     la a1, Message23
     ecall
+
     li a3, 2
     li a4, 1
     count_trial:
@@ -324,6 +318,7 @@ print_result:
 
     beq s5, s3, break_code
 return_function:
+
     addi a0, x0, 4
     la a1, Message6
     ecall
@@ -333,6 +328,12 @@ return_function:
     ecall
 
     addi a3, a3, -1
+
+    beq a3, x0, end_program
+
+    addi a0, x0, 4
+    la a1, Message19.1
+    ecall
 
     addi a0, x0, 4
     la a1, Message20
@@ -356,29 +357,58 @@ return_function:
 end_program:
     li a2, 6
     add t0, x0, x0
-    
-    la a0, array
-    li a1, 1
-    li a1, 4
 
     addi a0, x0, 4
-    la a1, Message22
+    la a1, Message25
     ecall
 
-    addi a0, x0, 5
-    ecall 
-    la t0, num2
-    sb a0, 0(t0)
-    la t0, num2
-    lb t0, 0(t0)
-
-    addi a0, x0, 1
-    add a1, x0, t0
+    addi a0, x0, 4
+    la a1, Message24
     ecall
 
-    beq t0, a2, __start
-    addi a0, x0, 10
-    ecall
+    li t2, 0
+    li t3, 0
+    li t4, 0
+    li a2, 0
+    li t1, 4
+    secret_code1:
+        beq t1, x0, end_program1
+        la s1, array
+        slli t2, t3, 6
+        add t4, s1, t2
+        lb a2, 0(t4)
+
+        addi a0, x0, 1
+        add a1, x0, a2 
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        addi t3, t3, 1
+        addi t1, t1, -1
+        jal x0, secret_code1
+
+    end_program1:
+        addi a0, x0, 4
+        la a1, Message6
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message22
+        ecall
+
+        addi a0, x0, 5
+        ecall 
+        la t0, num2
+        sb a0, 0(t0)
+        la t0, num2
+        lb t0, 0(t0)
+
+        beq t0, a2, __start
+        addi a0, x0, 10
+        ecall
 
 break_code:
     li a2, 6
@@ -389,20 +419,53 @@ break_code:
     ecall
 
     addi a0, x0, 4
-    la a1, Message18
+    la a1, Message24
     ecall
 
-    addi a0, x0, 4
-    la a1, Message22
-    ecall
+    li t2, 0
+    li t3, 0
+    li t4, 0
+    li a2, 0
+    li t1, 4
+    secret_code:
+        beq t1, x0, break_code1
+        la s1, array
+        slli t2, t3, 6
+        add t4, s1, t2
+        lb a2, 0(t4)
 
-    addi a0, x0, 5
-    ecall 
-    la t0, num2
-    sb a0, 0(t0)
-    la t0, num2
-    lb t0, 0(t0)
+        addi a0, x0, 1
+        add a1, x0, a2 
+        ecall
 
-    beq t0, a2, __start
-    addi a0, x0, 10
-    ecall
+        addi a0, x0, 4
+        la a1, Message11
+        ecall
+
+        addi t3, t3, 1
+        addi t1, t1, -1
+        jal x0, secret_code
+
+    break_code1:
+        addi a0, x0, 4
+        la a1, Message6
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message18
+        ecall
+
+        addi a0, x0, 4
+        la a1, Message22
+        ecall
+
+        addi a0, x0, 5
+        ecall 
+        la t0, num2
+        sb a0, 0(t0)
+        la t0, num2
+        lb t0, 0(t0)
+
+        beq t0, a2, __start
+        addi a0, x0, 10
+        ecall
