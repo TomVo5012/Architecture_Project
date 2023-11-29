@@ -189,6 +189,7 @@ player2:
                 la a1, Message4.1
                 ecall
                 beq x0, x0, player2_input
+                
         # Store input in the array
         player2_store_value:
             la s2, array1
