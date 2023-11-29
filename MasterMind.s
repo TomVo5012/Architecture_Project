@@ -32,14 +32,17 @@
 
 .text
 __start:
+    # Display instructions how to play the game 
     addi a0, x0, 4
     la a1, Message
     ecall
-    
+
+    # Message to start the game 
     addi a0, x0, 4
     la a1, Message7
     ecall
 
+    # Reset all the values 
     li t0, 0
     li t1, 4
     li t2, 0
@@ -49,24 +52,25 @@ __start:
     add a2, x0, x0
     add a3, x0, x0
     
-# Loop to store the value in the array
+# Taking the inputs from player1
 player1_input:
+    # Checking if the player have input for the array 
     beq t1, x0, player2
 
-    # lreset the value of register t0
+    # Reset the value of register t0
     li t0, 0
 
-    # Message
+    # Ask the player to enter the secret code 
     addi a0, x0, 4
     la a1, Message16
     ecall
 
-    # Position number 
+    # Checking the index of the array 
+    # Display on the screen for player to keep track     
     addi a0, x0, 1
     add a1, x0, t5
     ecall
 
-    # Print out input from player 1
     addi a0, x0, 4
     la a1, Message12
     ecall
@@ -74,9 +78,9 @@ player1_input:
     # Ask input from player 1
     addi a0, x0, 5
     ecall 
-    la t0, num
-    sb a0, 0(t0)
-    la t0, num 
+    la t0, num      # load address of num into t0
+    sb a0, 0(t0)    # store the base address of t0 into a0
+    la t0, num      # load address 
     lb t0, 0(t0)
 
     # Checking the condition from Player 1
