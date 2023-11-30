@@ -26,6 +26,7 @@
     Message26: .asciiz "Enter Your Choice Here: "
     Message27: .asciiz "Type 1: Start The Game\nType 2: Rules of The Game\nType 3: Exit The Game\n"
     Message28: .asciiz "\nYour input is invalid\nPlease Enter Again!!!\n"
+    Message29: .asciiz "\nMasterMind rules:\nRule 1: There are two players, who are Codemaker and Codebreaker\nRule 2: Codemaker will create the secrete code which contains four colors and the colors can be repeated\n         1: RED\n         2: YELLOW\n         3: GREEN\n         4: PURPLE\nRule 3: Codebreaker must guess what the secrete code is\nRule 4: Codebreaker will have 10 trials to guess the secrete code before losing\nRule 5: Codebreak can only win after successfully guessing the secrete code under 10 trials\n\n"
     array: .byte 0, 0, 0, 0
     array1: .byte 0, 0, 0, 0
     num: .byte 0
@@ -78,7 +79,7 @@ invalid:
 instructions:
     # Message to start the game 
     addi a0, x0, 4
-    la a1, Message7
+    la a1, Message29
     ecall
     jal x0, instruction1    
 
