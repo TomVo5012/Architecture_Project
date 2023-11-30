@@ -1,6 +1,6 @@
 .global __start
 .data
-    Message: .asciiz "\nWelcome to the Master Mind Game!!!!\nAuthors: Kiet Vo and Emanuel Cintron\n"
+    Message: .asciiz "\nWelcome to the Master Mind Game!!!!\nAuthors: Kiet Vo and Emanuel Cintron\n\n"
     Message4: .asciiz "Your input "
     Message4.1: .asciiz " is invalid\nPlease Enter again!!!!\n " 
     Message6: .asciiz "\n"
@@ -38,48 +38,49 @@ __start:
     li t1, 1
     li t2, 2
     li t3, 3
-    # Display instructions how to play the game 
+    # Welcome message  
     addi a0, x0, 4
     la a1, Message
     ecall
 
-    # Display instructions how to play the game 
-    addi a0, x0, 4
-    la a1, Message27
-    ecall
+    instruction1:
+        # Display instructions how to play the game 
+        addi a0, x0, 4
+        la a1, Message27
+        ecall
 
-    # Display instructions how to play the game 
-    addi a0, x0, 4
-    la a1, Message26
-    ecall
+        # Display enter the choice  
+        addi a0, x0, 4
+        la a1, Message26
+        ecall
 
-    # Take input from player 1
-    addi a0, x0, 5
-    ecall 
-    la t0, num3      # load address of num into t0
-    sb a0, 0(t0)    # store the base address of t0 into a0
-    la t0, num3      # load address of num into t0
-    lb t0, 0(t0)    # load value at base address of t0 into t0
+        # Take input from player 1
+        addi a0, x0, 5
+        ecall 
+        la t0, num3      # load address of num into t0
+        sb a0, 0(t0)    # store the base address of t0 into a0
+        la t0, num3      # load address of num into t0
+        lb t0, 0(t0)    # load value at base address of t0 into t0
 
-    beq t0, t1, game_start
-    beq t0, t2, instructions
-    beq t0, t3, exit_program
-    beq t0, x0, invalid
-    bge t0, t3, invalid
+        beq t0, t1, game_start
+        beq t0, t2, instructions
+        beq t0, t3, exit_program
+        beq t0, x0, invalid
+        bge t0, t3, invalid
 
 invalid:
     # Message to start the game 
     addi a0, x0, 4
     la a1, Message28
     ecall
-    jal x0, __start   
+    jal x0, instruction1   
 
 instructions:
     # Message to start the game 
     addi a0, x0, 4
     la a1, Message7
     ecall
-    jal x0, __start    
+    jal x0, instruction1    
 
 game_start:
 
