@@ -533,7 +533,7 @@ return_function:
 # The end_program function will ask players if they want to restart the new game 
 end_program:
     # set the value of a2 to 6
-    li a2, 6
+    li a7, 6
     # reset the value of t0
     add t0, x0, x0
 
@@ -592,14 +592,14 @@ end_program:
         la t0, num2
         lb t0, 0(t0)
 
-        beq t0, a2, __start
+        beq t0, a7, __start
         addi a0, x0, 10
         ecall
 
 # break_code function is similar to end_program
 # But the break_code function will announce that the player 2 has successfully broken the code
 break_code:
-    li a2, 6
+    li a7, 6
     add t0, x0, x0
 
     addi a0, x0, 4
@@ -654,7 +654,7 @@ break_code:
         la t0, num2
         lb t0, 0(t0)
 
-        beq t0, a2, __start
+        beq t0, a7, __start
         addi a0, x0, 10
         ecall
 
