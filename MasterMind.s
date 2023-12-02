@@ -43,7 +43,8 @@ __start:
     addi a0, x0, 4
     la a1, Message
     ecall
-
+    
+    # Display options for players to choose 
     instruction1:
         # Display instructions how to play the game 
         addi a0, x0, 4
@@ -68,7 +69,7 @@ __start:
         beq t0, t3, exit_program
         beq t0, x0, invalid
         bge t0, t3, invalid
-
+# This will check whether the inputs are invalid or not
 invalid:
     # Message to start the game 
     addi a0, x0, 4
@@ -76,6 +77,7 @@ invalid:
     ecall
     jal x0, instruction1   
 
+# This will display the rules of the game 
 instructions:
     # Message to start the game 
     addi a0, x0, 4
@@ -83,8 +85,8 @@ instructions:
     ecall
     jal x0, instruction1    
 
+# This function will start the game
 game_start:
-
     # Message to start the game 
     addi a0, x0, 4
     la a1, Message7
