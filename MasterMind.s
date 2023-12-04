@@ -2,7 +2,7 @@
 .data
     Message: .asciiz "\nWelcome to the Master Mind Game!!!!\nAuthors: Kiet Vo and Emanuel Cintron\n\n"
     Message4: .asciiz "Your input "
-    Message4.1: .asciiz " is invalid\nPlease Enter again!!!!\n " 
+    Message4.1: .asciiz " is invalid\nPlease Enter again (From 1 to 4)!!!!\n" 
     Message6: .asciiz "\n"
     Message7: .asciiz "Enter your secret code\n"
     Message9: .asciiz "Your Trial "
